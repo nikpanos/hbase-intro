@@ -61,8 +61,7 @@ public class HBaseTemperatureBulkImporter extends Configured implements Tool {
     job.setMapperClass(HBaseTemperatureMapper.class);
     job.setMapOutputKeyClass(ImmutableBytesWritable.class);
     job.setMapOutputValueClass(Put.class);
-    HTable table = new HTable(conf, "observations");
-    try {
+    try(HTable table = new HTable(conf, "observations")) {
       HFileOutputFormat2.configureIncrementalLoad(job, table);
 
       if (!job.waitForCompletion(true)) {
@@ -73,8 +72,6 @@ public class HBaseTemperatureBulkImporter extends Configured implements Tool {
       loader.doBulkLoad(tmpPath, table);
       FileSystem.get(conf).delete(tmpPath, true);
       return 0;
-    } finally {
-      table.close();
     }
   }
 

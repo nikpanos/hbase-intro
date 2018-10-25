@@ -19,8 +19,8 @@ public class HBaseStationImporter extends Configured implements Tool {
       return -1;
     }
     
-    HTable table = new HTable(HBaseConfiguration.create(getConf()), "stations");
-    try {
+
+    try(HTable table = new HTable(HBaseConfiguration.create(getConf()), "stations")) {
       NcdcStationMetadata metadata = new NcdcStationMetadata();
       metadata.initialize(new File(args[0]));
       Map<String, String> stationIdToNameMap = metadata.getStationIdToNameMap();
@@ -37,8 +37,6 @@ public class HBaseStationImporter extends Configured implements Tool {
         table.put(put);
       }
       return 0;
-    } finally {
-      table.close();
     }
   }
 
