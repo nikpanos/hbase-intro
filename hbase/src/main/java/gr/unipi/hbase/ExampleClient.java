@@ -19,8 +19,7 @@ public class ExampleClient {
   public static void main(String[] args) throws IOException {
     Configuration config = HBaseConfiguration.create();
     // Create table
-    HBaseAdmin admin = new HBaseAdmin(config);
-    try {
+    try(HBaseAdmin admin = new HBaseAdmin(config)) {
       TableName tableName = TableName.valueOf("test");
       HTableDescriptor htd = new HTableDescriptor(tableName);
       HColumnDescriptor hcd = new HColumnDescriptor("data");
@@ -32,8 +31,7 @@ public class ExampleClient {
         throw new IOException("Failed create of table");
       }
       // Run some operations -- three puts, a get, and a scan -- against the table.
-      HTable table = new HTable(config, tableName);
-      try {
+      try(HTable table = new HTable(config, tableName)) {
         for (int i = 1; i <= 3; i++) {
           byte[] row = Bytes.toBytes("row" + i);
           Put put = new Put(row);
@@ -47,22 +45,15 @@ public class ExampleClient {
         Result result = table.get(get);
         System.out.println("Get: " + result);
         Scan scan = new Scan();
-        ResultScanner scanner = table.getScanner(scan);
-        try {
+        try(ResultScanner scanner = table.getScanner(scan)) {
           for (Result scannerResult : scanner) {
             System.out.println("Scan: " + scannerResult);
           }
-        } finally {
-          scanner.close();
         }
         // Disable then drop the table
         admin.disableTable(tableName);
         admin.deleteTable(tableName);
-      } finally {
-        table.close();
       }
-    } finally {
-      admin.close();
     }
   }
 }
