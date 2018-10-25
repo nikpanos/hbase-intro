@@ -45,8 +45,8 @@ public class HBaseTemperatureQuery extends Configured implements Tool {
       return -1;
     }
     
-    HTable table = new HTable(HBaseConfiguration.create(getConf()), "observations");
-    try {
+
+    try(HTable table = new HTable(HBaseConfiguration.create(getConf()), "observations")) {
       NavigableMap<Long, Integer> observations =
           getStationObservations(table, args[0], Long.MAX_VALUE, 10).descendingMap();
       for (Map.Entry<Long, Integer> observation : observations.entrySet()) {
@@ -55,8 +55,6 @@ public class HBaseTemperatureQuery extends Configured implements Tool {
             observation.getValue());
       }
       return 0;
-    } finally {
-      table.close();
     }
   }
 
