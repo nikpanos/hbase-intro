@@ -23,8 +23,8 @@ public class HBaseTemperatureQuery extends Configured implements Tool {
     NavigableMap<Long, Integer> resultMap = new TreeMap<Long, Integer>();
     Scan scan = new Scan(startRow);
     scan.addColumn(DATA_COLUMNFAMILY, AIRTEMP_QUALIFIER);
-    ResultScanner scanner = table.getScanner(scan);
-    try {
+    //ResultScanner scanner = table.getScanner(scan);
+    try(ResultScanner scanner = table.getScanner(scan)) {
       Result res;
       int count = 0;
       while ((res = scanner.next()) != null && count++ < maxCount) {
@@ -35,8 +35,6 @@ public class HBaseTemperatureQuery extends Configured implements Tool {
         Integer temp = Bytes.toInt(value);
         resultMap.put(stamp, temp);
       }
-    } finally {
-      scanner.close();
     }
     return resultMap;
   }
