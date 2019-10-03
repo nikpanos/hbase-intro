@@ -1,0 +1,20 @@
+{
+  "apiRoutes": [
+    {
+      "name": "default",
+      "routeTemplate": "api/{controller}/{action}"
+    },
+    {
+      "name": "administration",
+      "routeTemplate": "api/administration/{action}",
+      "sourceUri": "https://localhost/xxx/xxx/",
+      "targetUri": "https://localhost/yyy/yyy"
+    },
+    {
+      "name": "demo",
+      "routeTemplate": "api/demo/{action}",
+      "sourceUri": "https://localhost/xxx/xxx/",
+      "targetUri": "https://localhost/yyy/yyy"
+    }
+  ]
+}
